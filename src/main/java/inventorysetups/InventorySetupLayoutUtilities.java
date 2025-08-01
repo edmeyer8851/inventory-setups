@@ -97,10 +97,9 @@ public class InventorySetupLayoutUtilities
 		layout.resize(newSizeGuess);
 		final HashMap<Integer, Integer> counter = new HashMap<>();
 
-		int nextPos;
 		InventorySetupsZigZagTypeID zigZagType = config.zigZagType();
 
-		nextPos = layoutZigZagContainer(setup.getEquipment(), layout, tag, addToTag, startOfEquipment, counter);
+		int nextPos = layoutZigZagContainer(setup.getEquipment(), layout, tag, addToTag, startOfEquipment, counter);
 
 		if (setup.getQuiver() != null && !setup.getQuiver().isEmpty())
 		{
@@ -160,7 +159,8 @@ public class InventorySetupLayoutUtilities
 		boolean topToBottom = config.zigZagType().equals(InventorySetupsZigZagTypeID.TOP_TO_BOTTOM);
 		final int rowSize = 8;
 
-		if (!topToBottom){
+		if (!topToBottom)
+		{
 			nextPos = 8;
 		}
 
@@ -172,7 +172,8 @@ public class InventorySetupLayoutUtilities
 				continue;
 			}
 
-            if (topToBottom) {
+            if (topToBottom)
+			{
 				if (nextPos == (rowSize * 2) - 1)
 				{
 					// We hit the end of a double row, we need to start a new one.
@@ -189,16 +190,22 @@ public class InventorySetupLayoutUtilities
 					// We are in the bottom half of a double. Go back up and add one to move to the right.
 					nextPos = (nextPos - rowSize) + 1;
 				}
-            } else {
-				if (nextPos == rowSize - 1) {
+            }
+			else
+			{
+				if (nextPos == rowSize - 1)
+				{
 					// We hit the end of a double row, we need to start a new one.
 					doubleRowStart += 2;
 					nextPos = (doubleRowStart * rowSize) - 1;
 				}
-				else if (nextPos > ((doubleRowStart * rowSize) + rowSize) - 1) {
+				else if (nextPos > ((doubleRowStart * rowSize) + rowSize) - 1)
+				{
 					// We are in the bottom half of a double. Go up directly one.
 					nextPos -= rowSize;
-				} else {
+				}
+				else
+				{
 					// We are in the top half of a double row. Go back down and add one to move to the right.
 					nextPos = nextPos + rowSize + 1;
 				}
