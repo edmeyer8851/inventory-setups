@@ -145,6 +145,7 @@ public class InventorySetupsPlugin extends Plugin
 	public static final String CONFIG_KEY_PERSIST_HOTKEYS = "persistHotKeysOutsideBank";
 	public static final String CONFIG_KEY_USE_LAYOUTS = "useLayouts";
 	public static final String CONFIG_KEY_LAYOUT_DEFAULT = "defaultLayout";
+	public static final String CONFIG_KEY_ZIGZAG_TYPE = "zigZagType";
 	public static final String CONFIG_KEY_LAYOUT_DUPLICATES = "addDuplicatesInLayouts";
 	public static final String CONFIG_KEY_ENABLE_LAYOUT_WARNING = "enableLayoutWarning";
 	public static final String CONFIG_GROUP_HUB_BTL = "banktaglayouts";
@@ -764,11 +765,13 @@ public class InventorySetupsPlugin extends Plugin
 		{
 			final Layout old = layoutUtilities.getSetupLayout(setup);
 
+			InventorySetupsZigZagTypeID zigZagType = config.zigZagType();
+
 			// Don't add any items to the tag yet. We just want to display a layout
 			// We can add tags after if the user likes the layout.
 			// This stops the case that somebody removed a tag from the inventory setup
 			// And this layout won't accidentally bring it back if they decide not to use it.
-			final Layout new_ = layoutUtilities.createSetupLayout(setup, type, false);
+			final Layout new_ = layoutUtilities.createSetupLayout(setup, type, zigZagType, false);
 
 			// Temporarily save the new layout to open the tag.
 			layoutManager.saveLayout(new_);
@@ -786,7 +789,7 @@ public class InventorySetupsPlugin extends Plugin
 						clientThread.invoke(() ->
 						{
 							// Need this to be in a client thread invoke in case the user types 1 instead.
-							layoutUtilities.createSetupLayout(setup, type, true);
+							layoutUtilities.createSetupLayout(setup, type, zigZagType,true);
 							layoutManager.saveLayout(new_);
 						});
 

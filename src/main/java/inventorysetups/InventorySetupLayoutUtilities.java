@@ -67,10 +67,11 @@ public class InventorySetupLayoutUtilities
 	public Layout createSetupLayout(final InventorySetup setup)
 	{
 		InventorySetupLayoutType type = config.defaultLayout();
-		return createSetupLayout(setup, type, true);
+		InventorySetupsZigZagTypeID zigZagTypeID = config.zigZagType();
+		return createSetupLayout(setup, type,zigZagTypeID, true);
 	}
 
-	public Layout createSetupLayout(final InventorySetup setup, InventorySetupLayoutType type, final boolean addToTag)
+	public Layout createSetupLayout(final InventorySetup setup, InventorySetupLayoutType type, InventorySetupsZigZagTypeID zigZagTypeID, final boolean addToTag)
 	{
 		if (type.equals(InventorySetupLayoutType.PRESET))
 		{
@@ -78,6 +79,7 @@ public class InventorySetupLayoutUtilities
 		}
 		else
 		{
+
 			return getZigZagLayout(setup, addToTag);
 		}
 	}
@@ -97,13 +99,28 @@ public class InventorySetupLayoutUtilities
 		layout.resize(newSizeGuess);
 		final HashMap<Integer, Integer> counter = new HashMap<>();
 
+		int nextPos;
+		InventorySetupsZigZagTypeID zigZagType = config.zigZagType();
 
-		int nextPos = layoutZigZagContainer(setup.getEquipment(), layout, tag, addToTag, startOfEquipment, counter);
+		if (zigZagType.equals(InventorySetupsZigZagTypeID.Top_To_Bottom)) {
+			nextPos = layoutZigZagContainer(setup.getEquipment(), layout, tag, addToTag, startOfEquipment, counter);
+		}
+		else {
+			nextPos = layoutZigZagContainerNew(setup.getEquipment(), layout, tag, addToTag, startOfEquipment, counter);
+		}
+
 		if (setup.getQuiver() != null && !setup.getQuiver().isEmpty())
 		{
 			addItemToLayout(layout, tag, setup.getQuiver().get(0), nextPos, addToTag, counter);
 		}
-		layoutZigZagContainer(setup.getInventory(), layout, tag, addToTag, startOfInventory, counter);
+
+		if (zigZagType.equals(InventorySetupsZigZagTypeID.Top_To_Bottom)) {
+			layoutZigZagContainer(setup.getInventory(), layout, tag, addToTag, startOfInventory, counter);
+		}
+		else {
+			layoutZigZagContainerNew(setup.getInventory(), layout, tag, addToTag, startOfInventory, counter);
+		}
+
 
 		// Layout the rune pouch
 		if (setup.getRune_pouch() != null)
@@ -178,6 +195,42 @@ public class InventorySetupLayoutUtilities
 			{
 				// We are in the bottom half of a double. Go back up and add one to move to the right.
 				nextPos = (nextPos - rowSize) + 1;
+			}
+		}
+
+		return nextPos;
+	}
+
+	private int layoutZigZagContainerNew(final List<InventorySetupsItem> container, final Layout layout, final String tag, boolean addToTag, final int start, final Map<Integer, Integer> counter)
+	{
+
+		int doubleRowStart = 0;
+		int nextPos = 8;
+		final int rowSize = 8;
+
+		for (final InventorySetupsItem item : container)
+		{
+			boolean added = addItemToLayout(layout, tag, item, nextPos + start, addToTag, counter);
+			if (!added)
+			{
+				continue;
+			}
+
+			if (nextPos == rowSize - 1 )
+			{
+				// We hit the end of a double row, we need to start a new one.
+				doubleRowStart += 2;
+				nextPos = (doubleRowStart * rowSize) - 1;
+			}
+			if (nextPos > ((doubleRowStart * rowSize) + rowSize) - 1)
+			{
+				// We are in the bottom half of a double. Go up directly one.
+				nextPos -= rowSize;
+			}
+			else
+			{
+				// We are in the top half of a double row. Go back down and add one to move to the right.
+				nextPos = nextPos + rowSize + 1;
 			}
 		}
 
