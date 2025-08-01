@@ -197,7 +197,7 @@ public class InventorySetupLayoutUtilities
 					doubleRowStart += 2;
 					nextPos = (doubleRowStart * rowSize) - 1;
 				}
-				if (nextPos > ((doubleRowStart * rowSize) + rowSize) - 1) {
+				else if (nextPos > ((doubleRowStart * rowSize) + rowSize) - 1) {
 					// We are in the bottom half of a double. Go up directly one.
 					nextPos -= rowSize;
 				} else {
