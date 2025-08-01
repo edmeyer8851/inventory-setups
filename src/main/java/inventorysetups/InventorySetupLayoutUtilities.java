@@ -67,11 +67,10 @@ public class InventorySetupLayoutUtilities
 	public Layout createSetupLayout(final InventorySetup setup)
 	{
 		InventorySetupLayoutType type = config.defaultLayout();
-		InventorySetupsZigZagTypeID zigZagTypeID = config.zigZagType();
-		return createSetupLayout(setup, type,zigZagTypeID, true);
+		return createSetupLayout(setup, type, true);
 	}
 
-	public Layout createSetupLayout(final InventorySetup setup, InventorySetupLayoutType type, InventorySetupsZigZagTypeID zigZagTypeID, final boolean addToTag)
+	public Layout createSetupLayout(final InventorySetup setup, InventorySetupLayoutType type, final boolean addToTag)
 	{
 		if (type.equals(InventorySetupLayoutType.PRESET))
 		{
@@ -79,7 +78,6 @@ public class InventorySetupLayoutUtilities
 		}
 		else
 		{
-
 			return getZigZagLayout(setup, addToTag);
 		}
 	}
@@ -102,24 +100,15 @@ public class InventorySetupLayoutUtilities
 		int nextPos;
 		InventorySetupsZigZagTypeID zigZagType = config.zigZagType();
 
-		if (zigZagType.equals(InventorySetupsZigZagTypeID.Top_To_Bottom)) {
-			nextPos = layoutZigZagContainerTopToBottom(setup.getEquipment(), layout, tag, addToTag, startOfEquipment, counter);
-		}
-		else {
-			nextPos = layoutZigZagContainerBottomToTop(setup.getEquipment(), layout, tag, addToTag, startOfEquipment, counter);
-		}
+		nextPos = layoutZigZagContainer(setup.getEquipment(), layout, tag, addToTag, startOfEquipment, counter);
 
 		if (setup.getQuiver() != null && !setup.getQuiver().isEmpty())
 		{
 			addItemToLayout(layout, tag, setup.getQuiver().get(0), nextPos, addToTag, counter);
 		}
 
-		if (zigZagType.equals(InventorySetupsZigZagTypeID.Top_To_Bottom)) {
-			layoutZigZagContainerTopToBottom(setup.getInventory(), layout, tag, addToTag, startOfInventory, counter);
-		}
-		else {
-			layoutZigZagContainerBottomToTop(setup.getInventory(), layout, tag, addToTag, startOfInventory, counter);
-		}
+		layoutZigZagContainer(setup.getInventory(), layout, tag, addToTag, startOfInventory, counter);
+
 
 
 		// Layout the rune pouch
@@ -163,51 +152,20 @@ public class InventorySetupLayoutUtilities
 		return layout;
 	}
 
-	private int layoutZigZagContainerTopToBottom(final List<InventorySetupsItem> container, final Layout layout, final String tag, boolean addToTag, final int start, final Map<Integer, Integer> counter)
+	private int layoutZigZagContainer(final List<InventorySetupsItem> container, final Layout layout, final String tag, boolean addToTag, final int start, final Map<Integer, Integer> counter)
 	{
 		// Note, this might not work if the start is not a multiple of the row size (8)...
 		// But this is not needed, so I won't spend time over engineering this function.
 
 		int doubleRowStart = 0;
 		int nextPos = 0;
+		boolean topToBottom = config.zigZagType().equals(InventorySetupsZigZagTypeID.TOP_TO_BOTTOM);
 		final int rowSize = 8;
 
-		for (final InventorySetupsItem item : container)
-		{
-			boolean added = addItemToLayout(layout, tag, item, nextPos + start, addToTag, counter);
-			if (!added)
-			{
-				continue;
-			}
-
-			if (nextPos == (rowSize * 2) - 1)
-			{
-				// We hit the end of a double row, we need to start a new one.
-				doubleRowStart += 2;
-				nextPos = doubleRowStart * rowSize;
-			}
-			else if (nextPos < ((doubleRowStart * rowSize) + rowSize))
-			{
-				// We are in the top half of a double row. Go down directly one.
-				nextPos += rowSize;
-			}
-			else
-			{
-				// We are in the bottom half of a double. Go back up and add one to move to the right.
-				nextPos = (nextPos - rowSize) + 1;
-			}
+		if (!topToBottom){
+			nextPos = 8;
 		}
 
-		return nextPos;
-	}
-
-	private int layoutZigZagContainerBottomToTop(final List<InventorySetupsItem> container, final Layout layout, final String tag, boolean addToTag, final int start, final Map<Integer, Integer> counter)
-	{
-
-		int doubleRowStart = 0;
-		int nextPos = 8;
-		final int rowSize = 8;
-
 		for (final InventorySetupsItem item : container)
 		{
 			boolean added = addItemToLayout(layout, tag, item, nextPos + start, addToTag, counter);
@@ -216,21 +174,36 @@ public class InventorySetupLayoutUtilities
 				continue;
 			}
 
-			if (nextPos == rowSize - 1 )
-			{
-				// We hit the end of a double row, we need to start a new one.
-				doubleRowStart += 2;
-				nextPos = (doubleRowStart * rowSize) - 1;
-			}
-			if (nextPos > ((doubleRowStart * rowSize) + rowSize) - 1)
-			{
-				// We are in the bottom half of a double. Go up directly one.
-				nextPos -= rowSize;
-			}
-			else
-			{
-				// We are in the top half of a double row. Go back down and add one to move to the right.
-				nextPos = nextPos + rowSize + 1;
+            if (topToBottom) {
+				if (nextPos == (rowSize * 2) - 1)
+				{
+					// We hit the end of a double row, we need to start a new one.
+					doubleRowStart += 2;
+					nextPos = doubleRowStart * rowSize;
+				}
+				else if (nextPos < ((doubleRowStart * rowSize) + rowSize))
+				{
+					// We are in the top half of a double row. Go down directly one.
+					nextPos += rowSize;
+				}
+				else
+				{
+					// We are in the bottom half of a double. Go back up and add one to move to the right.
+					nextPos = (nextPos - rowSize) + 1;
+				}
+            } else {
+				if (nextPos == rowSize - 1) {
+					// We hit the end of a double row, we need to start a new one.
+					doubleRowStart += 2;
+					nextPos = (doubleRowStart * rowSize) - 1;
+				}
+				if (nextPos > ((doubleRowStart * rowSize) + rowSize) - 1) {
+					// We are in the bottom half of a double. Go up directly one.
+					nextPos -= rowSize;
+				} else {
+					// We are in the top half of a double row. Go back down and add one to move to the right.
+					nextPos = nextPos + rowSize + 1;
+				}
 			}
 		}
 

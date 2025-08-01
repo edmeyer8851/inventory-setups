@@ -320,7 +320,7 @@ public interface InventorySetupsConfig extends Config
 	)
 	default InventorySetupsZigZagTypeID zigZagType()
 	{
-		return InventorySetupsZigZagTypeID.Top_To_Bottom;
+		return InventorySetupsZigZagTypeID.TOP_TO_BOTTOM;
 	}
 
 	@ConfigItem(

@@ -771,7 +771,7 @@ public class InventorySetupsPlugin extends Plugin
 			// We can add tags after if the user likes the layout.
 			// This stops the case that somebody removed a tag from the inventory setup
 			// And this layout won't accidentally bring it back if they decide not to use it.
-			final Layout new_ = layoutUtilities.createSetupLayout(setup, type, zigZagType, false);
+			final Layout new_ = layoutUtilities.createSetupLayout(setup, type, false);
 
 			// Temporarily save the new layout to open the tag.
 			layoutManager.saveLayout(new_);
@@ -789,7 +789,7 @@ public class InventorySetupsPlugin extends Plugin
 						clientThread.invoke(() ->
 						{
 							// Need this to be in a client thread invoke in case the user types 1 instead.
-							layoutUtilities.createSetupLayout(setup, type, zigZagType,true);
+							layoutUtilities.createSetupLayout(setup, type, true);
 							layoutManager.saveLayout(new_);
 						});
 

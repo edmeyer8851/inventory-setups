@@ -5,11 +5,11 @@ import java.util.Collections;
 import java.util.List;
 
 public enum InventorySetupsZigZagTypeID {
-    //use if you want to withdraw using a top to bottom zigzag pattern
-    Top_To_Bottom(0),
+    // Use if you want to withdraw using a top to bottom zigzag pattern
+    TOP_TO_BOTTOM("Top to Bottom", 0),
 
-    // use if you want to withdraw using a bottom to top zigzag pattern
-    Bottom_To_Top(1);
+    // Use if you want to withdraw using a bottom to top zigzag pattern
+    Bottom_To_Top("Bottom to Top", 1);
 
     private final int type;
 
@@ -21,7 +21,7 @@ public enum InventorySetupsZigZagTypeID {
         Collections.addAll(VALUES, InventorySetupsZigZagTypeID.values());
     }
 
-    InventorySetupsZigZagTypeID(int type)
+    InventorySetupsZigZagTypeID(String s, int type)
     {
         this.type = type;
     }
