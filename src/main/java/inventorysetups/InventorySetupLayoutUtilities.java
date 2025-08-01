@@ -109,8 +109,6 @@ public class InventorySetupLayoutUtilities
 
 		layoutZigZagContainer(setup.getInventory(), layout, tag, addToTag, startOfInventory, counter);
 
-
-
 		// Layout the rune pouch
 		if (setup.getRune_pouch() != null)
 		{
