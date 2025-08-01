@@ -103,10 +103,10 @@ public class InventorySetupLayoutUtilities
 		InventorySetupsZigZagTypeID zigZagType = config.zigZagType();
 
 		if (zigZagType.equals(InventorySetupsZigZagTypeID.Top_To_Bottom)) {
-			nextPos = layoutZigZagContainer(setup.getEquipment(), layout, tag, addToTag, startOfEquipment, counter);
+			nextPos = layoutZigZagContainerTopToBottom(setup.getEquipment(), layout, tag, addToTag, startOfEquipment, counter);
 		}
 		else {
-			nextPos = layoutZigZagContainerNew(setup.getEquipment(), layout, tag, addToTag, startOfEquipment, counter);
+			nextPos = layoutZigZagContainerBottomToTop(setup.getEquipment(), layout, tag, addToTag, startOfEquipment, counter);
 		}
 
 		if (setup.getQuiver() != null && !setup.getQuiver().isEmpty())
@@ -115,10 +115,10 @@ public class InventorySetupLayoutUtilities
 		}
 
 		if (zigZagType.equals(InventorySetupsZigZagTypeID.Top_To_Bottom)) {
-			layoutZigZagContainer(setup.getInventory(), layout, tag, addToTag, startOfInventory, counter);
+			layoutZigZagContainerTopToBottom(setup.getInventory(), layout, tag, addToTag, startOfInventory, counter);
 		}
 		else {
-			layoutZigZagContainerNew(setup.getInventory(), layout, tag, addToTag, startOfInventory, counter);
+			layoutZigZagContainerBottomToTop(setup.getInventory(), layout, tag, addToTag, startOfInventory, counter);
 		}
 
 
@@ -163,7 +163,7 @@ public class InventorySetupLayoutUtilities
 		return layout;
 	}
 
-	private int layoutZigZagContainer(final List<InventorySetupsItem> container, final Layout layout, final String tag, boolean addToTag, final int start, final Map<Integer, Integer> counter)
+	private int layoutZigZagContainerTopToBottom(final List<InventorySetupsItem> container, final Layout layout, final String tag, boolean addToTag, final int start, final Map<Integer, Integer> counter)
 	{
 		// Note, this might not work if the start is not a multiple of the row size (8)...
 		// But this is not needed, so I won't spend time over engineering this function.
@@ -201,7 +201,7 @@ public class InventorySetupLayoutUtilities
 		return nextPos;
 	}
 
-	private int layoutZigZagContainerNew(final List<InventorySetupsItem> container, final Layout layout, final String tag, boolean addToTag, final int start, final Map<Integer, Integer> counter)
+	private int layoutZigZagContainerBottomToTop(final List<InventorySetupsItem> container, final Layout layout, final String tag, boolean addToTag, final int start, final Map<Integer, Integer> counter)
 	{
 
 		int doubleRowStart = 0;
