@@ -97,15 +97,11 @@ public class InventorySetupLayoutUtilities
 		layout.resize(newSizeGuess);
 		final HashMap<Integer, Integer> counter = new HashMap<>();
 
-		InventorySetupsZigZagTypeID zigZagType = config.zigZagType();
-
 		int nextPos = layoutZigZagContainer(setup.getEquipment(), layout, tag, addToTag, startOfEquipment, counter);
-
 		if (setup.getQuiver() != null && !setup.getQuiver().isEmpty())
 		{
 			addItemToLayout(layout, tag, setup.getQuiver().get(0), nextPos, addToTag, counter);
 		}
-
 		layoutZigZagContainer(setup.getInventory(), layout, tag, addToTag, startOfInventory, counter);
 
 		// Layout the rune pouch
@@ -155,14 +151,10 @@ public class InventorySetupLayoutUtilities
 		// But this is not needed, so I won't spend time over engineering this function.
 
 		int doubleRowStart = 0;
-		int nextPos = 0;
 		boolean topToBottom = config.zigZagType().equals(InventorySetupsZigZagTypeID.TOP_TO_BOTTOM);
 		final int rowSize = 8;
 
-		if (!topToBottom)
-		{
-			nextPos = 8;
-		}
+		int nextPos = topToBottom ? 0 : 8;
 
 		for (final InventorySetupsItem item : container)
 		{
@@ -199,7 +191,7 @@ public class InventorySetupLayoutUtilities
 					doubleRowStart += 2;
 					nextPos = (doubleRowStart * rowSize) - 1;
 				}
-				else if (nextPos > ((doubleRowStart * rowSize) + rowSize) - 1)
+				if (nextPos > ((doubleRowStart * rowSize) + rowSize) - 1)
 				{
 					// We are in the bottom half of a double. Go up directly one.
 					nextPos -= rowSize;

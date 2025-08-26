@@ -9,7 +9,7 @@ public enum InventorySetupsZigZagTypeID {
     TOP_TO_BOTTOM("Top to Bottom", 0),
 
     // Use if you want to withdraw using a bottom to top zigzag pattern
-    Bottom_To_Top("Bottom to Top", 1);
+    BOTTOM_TO_TOP("Bottom to Top", 1);
 
     private final int type;
 
