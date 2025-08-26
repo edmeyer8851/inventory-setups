@@ -166,7 +166,7 @@ public class InventorySetupLayoutUtilities
 
             if (topToBottom)
 			{
-				if (nextPos == (rowSize * 2) - 1)
+				if (nextPos == ((doubleRowStart * rowSize) + (2 * rowSize) - 1))
 				{
 					// We hit the end of a double row, we need to start a new one.
 					doubleRowStart += 2;
@@ -185,13 +185,13 @@ public class InventorySetupLayoutUtilities
             }
 			else
 			{
-				if (nextPos == rowSize - 1)
+				if (nextPos == ((doubleRowStart * rowSize) + rowSize - 1))
 				{
 					// We hit the end of a double row, we need to start a new one.
 					doubleRowStart += 2;
-					nextPos = (doubleRowStart * rowSize) - 1;
+					nextPos = (doubleRowStart * rowSize) + rowSize;
 				}
-				if (nextPos > ((doubleRowStart * rowSize) + rowSize) - 1)
+				else if (nextPos > ((doubleRowStart * rowSize) + rowSize) - 1)
 				{
 					// We are in the bottom half of a double. Go up directly one.
 					nextPos -= rowSize;
